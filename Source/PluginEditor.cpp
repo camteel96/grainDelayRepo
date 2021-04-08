@@ -19,7 +19,7 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     // Delay Time Slider
     delayKnob.addListener(this);
     delayKnob.setBounds(12,45,125,125);
-    delayKnob.setValue(grainDelay.delay);
+    delayKnob.setValue(audioProcessor.delay);
     delayKnob.setRange(10.f, 1024.f, 1.f); //min,max,increment size
     delayKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 75, 25);
     delayKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -63,7 +63,7 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     // Knob for Feedback Amount
     feedbackKnob.addListener(this);
     feedbackKnob.setBounds(170,25,70,70);
-    feedbackKnob.setValue(grainDelay.feedbackAmount);
+    feedbackKnob.setValue(audioProcessor.feedbackAmount);
     feedbackKnob.setRange(0.f, 100.f, 1.f); //min,max,increment size
     feedbackKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
     feedbackKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -78,7 +78,7 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     // Knob for wet/dry amount
     wetDryKnob.addListener(this);
     wetDryKnob.setBounds(250, 25, 70, 70);
-    wetDryKnob.setValue(grainDelay.wetDryAmount);
+    wetDryKnob.setValue(audioProcessor.wetDryAmount);
     wetDryKnob.setRange(0.f, 100.f, 1.f);
     wetDryKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
     wetDryKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -160,7 +160,6 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
 }
 
 
-
 GrainDelayAudioProcessorEditor::~GrainDelayAudioProcessorEditor()
 {
 }
@@ -186,12 +185,12 @@ void GrainDelayAudioProcessorEditor::resized()
 void GrainDelayAudioProcessorEditor::sliderValueChanged(Slider *slider) {
     
     if (slider == &delayKnob) {
-        grainDelay.delay = delayKnob.getValue();
-//        audioProcessor.delay = delayKnob.getValue();
+//        grainDelay.delay = delayKnob.getValue();
+        audioProcessor.delay = delayKnob.getValue();
     }
     if (slider == &feedbackKnob) {
-        grainDelay.feedbackAmount = feedbackKnob.getValue();
-//        audioProcessor.feedbackAmount = delayKnob.getValue();
+//        grainDelay.feedbackAmount = feedbackKnob.getValue();
+        audioProcessor.feedbackAmount = feedbackKnob.getValue();
 
     }
     if (slider == &grainSizeKnob) {

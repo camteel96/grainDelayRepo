@@ -11,15 +11,14 @@
 #include "GrainDelay.h"
 #include "PluginProcessor.h"
 
-// Constructor here
 GrainDelay::GrainDelay() {
 }
 
 //ADSR::ADSR() {}
 
-GrainDelay::GrainDelay(float delay, float speed) {
+// This is delay in samples
+GrainDelay::GrainDelay(float delay) {
     this->delay = delay;
-    this->speed = speed;
 }
 
 // Do I need processSignal and processSample?
@@ -39,64 +38,47 @@ float GrainDelay::processSample(float x, int channel){
         return x;
     }
     else {
-
-        //Do I need any of this? Think...
-        float lfo = depth * sin(currentAngle[channel]);;
-
-        currentAngle[channel] += angleChange;
-        if (currentAngle[channel] > 2.f * M_PI) {
-            currentAngle[channel] -= 2.f * M_PI;
-        }
-    
     
         // Delay Buffer - Grain Size in Samples
 //        int d1 = floor(delay + lfo);
         int d1 = floor(delay);
+        
 //        int d2 = d1 + MAX_BUFFERSIZE/2; // how far should write be from read index?
-        int d2 = d1 + 1; // how far should write be from read index?
+        //int d2 = d1 + 1; // how far should write be from read index?
 
-        float g2 = delay + lfo - (float)d1;
+        float g2 = delay - (float)d1; //fraction
 //        float g2 = delay - (float)d1;
         float g1 = 1.0f - g2;
         
-        int readIndex = index[channel] - d1;
-        if (readIndex < 0){
-            readIndex += MAX_BUFFERSIZE;
-        }
-        
-        int writeIndex = index[channel] - d2;
-        if (writeIndex < 0) {
-            writeIndex += MAX_BUFFERSIZE;
-        }
+//        int readIndex = index[channel] - d1;
+//        if (readIndex < 0){
+//            readIndex += MAX_BUFFERSIZE;
+//        }
+//
+//        int writeIndex = index[channel] - d2;
+//        if (writeIndex < 0) {
+//            writeIndex += MAX_BUFFERSIZE;
+//        }
         
         // Try both options here
-        float y =  g1 * delayBuffer[readIndex][channel] + g2 * delayBuffer[writeIndex][channel] * feedbackAmount;
-        //float y = g1 * delayBuffer[readIndex][channel]  * feedbackAmount;
-        
+        //float y =  g1 * delayBuffer[readIndex][channel] + g2 * delayBuffer[writeIndex][channel] * feedbackAmount;
+        float y = g1 * delayBuffer[index[channel]][channel] * feedbackAmount;
+
         delayBuffer[index[channel]][channel] = x;
 //        writeIndex = x;
 //        readIndex++;
 //        writeIndex++;
 
-        if (index[channel] < MAX_BUFFERSIZE - 1){
+        // I think here is where I can alter my grain Size without changing size of the array
+        if (index[channel] < grainSize){
             index[channel]++;
         }
         else {
             index[channel] = 0;
         }
-    
-//        if (readIndex > MAX_BUFFERSIZE){
-//        readIndex = 1;
-//        }
-//        else if (writeIndex > MAX_BUFFERSIZE) {
-//        writeIndex = 1;
-//        }
-
         
-        //Convert audio buffer to audio block
-        //dsp::AudioBlock<float> block(delayBuffer);
         // set wet/dry here since I have y and x?
-        y *= wetDryAmount;
+        //y *= wetDryAmount;
         //y -= x * wetValue;
 
     return y;
@@ -110,6 +92,10 @@ float GrainDelay::processSample(float x, int channel){
 void GrainDelay::setFs(float Fs) {
     this->Fs = Fs;
     // delaySamples = round(Fs*delayMS/1000.f);
+}
+
+void GrainDelay::setGrainSize(int grainSize){
+    this->grainSize = grainSize;
 }
 
 void GrainDelay::setBPM(float newBPM) {
@@ -179,13 +165,10 @@ void GrainDelay::setNoteDuration(NoteSelection newNoteSelection){
 //    delaySamples = round(Fs*delayMS/1000.f);
 //}
 
-void GrainDelay::setSpeed(float speed){
-    if (speed >= 0.1f && speed <=2.0f){
-        this->speed = speed;
-        angleChange = speed * (1.f/Fs) * 2 * M_PI;
-    }
-}
-
-void GrainDelay::setDepth(float depth){
-    this->depth = depth;
-}
+//void ADSR::setParameters(float attack, float decay, float sustain, float release){
+//
+//
+//
+//
+//
+//}

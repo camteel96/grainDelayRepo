@@ -62,10 +62,10 @@ private:
     Label wetDryLabel;
     Label grainSizeLabel;
     
-    Label attackLabel;
-    Label decayLabel;
-    Label sustainLabel;
-    Label releaseLabel;
+//    Label attackLabel;
+//    Label decayLabel;
+//    Label sustainLabel;
+//    Label releaseLabel;
     
     ToggleButton tempoSyncButton;
     ToggleButton notTempoSyncButton;

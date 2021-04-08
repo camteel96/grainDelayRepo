@@ -59,8 +59,8 @@ public:
     GrainDelay::NoteSelection noteSelect = GrainDelay::NoteSelection::QUARTER;
     bool tempoSyncd = true;
     
-//    float feedbackAmount = 50.f;
-//    float wetDryAmount = 1.f; // [0-100%]
+    float feedbackAmount = 50.f;
+    float wetDryAmount = 1.f; // [0-100%]
     int grainSize = 1024.f;
     // ADSR hard coded lengths
     float adsrAttack = 10.f;
@@ -72,9 +72,8 @@ private:
     
     
     GrainDelay grainDelay;
-   // VUAnalysis vuAnalysis;
     
-    ADSR adsr;
+    //ADSR adsr;
     
     AudioPlayHead* playHead;
     AudioPlayHead::CurrentPositionInfo currentPositionInfo;

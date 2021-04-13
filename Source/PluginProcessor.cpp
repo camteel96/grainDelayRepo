@@ -19,13 +19,29 @@ GrainDelayAudioProcessor::GrainDelayAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), state(*this, nullptr, "DelayParams", createParameterLayout())
 #endif
 {
 }
 
 GrainDelayAudioProcessor::~GrainDelayAudioProcessor()
 {
+}
+
+AudioProcessorValueTreeState::ParameterLayout GrainDelayAudioProcessor::createParameterLayout()
+{
+    std::vector<std::unique_ptr<RangedAudioParameter>> params; // syntax for parameter value, pointer destroys itself when we're done with it
+    
+    // make new audio parameter float for our delay knob
+    params.push_back(std::make_unique<AudioParameterFloat> ("delayMS","Delay",1.f,1000.f,1.f));
+    params.push_back(std::make_unique<AudioParameterFloat> ("grainSize","Grain Size",1.f,1024.f,1.f));
+    params.push_back(std::make_unique<AudioParameterFloat> ("wetDryAmount","Wet / Dry",0.f,1.f,.01f));
+    params.push_back(std::make_unique<AudioParameterFloat> ("feedbackAmount","Feedback",0.f,100.f,1.f));
+
+
+    
+    // we've got to return parameter layout, all of them in this case, go through all and terurn the whole set of them
+    return {params.begin(), params.end()};
 }
 
 //==============================================================================
@@ -155,10 +171,10 @@ void GrainDelayAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
             grainDelay.setBPM(newBPM);
             bpm = newBPM;
         }
-        //grainDelay.setNoteDuration(noteSelect);
+        grainDelay.setNoteDuration(noteSelect);
     }
     else{
-        grainDelay.setDelaySamples(delay);
+        grainDelay.setDelayMS(delayMS);
     }
 
     
@@ -192,15 +208,20 @@ juce::AudioProcessorEditor* GrainDelayAudioProcessor::createEditor()
 //==============================================================================
 void GrainDelayAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+   // handle entire state oft he plugin and set to this xml elements that goes out to DAW
+    auto currentState = state.copyState(); // make copy of state
+    std::unique_ptr<XmlElement> xml (currentState.createXml()); // use this copy to make XML element
+    copyXmlToBinary(*xml, destData); // copy over xmp to destination data
+    // no matter how many parameters I have, just need these three lines
+    
 }
 
 void GrainDelayAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<XmlElement> xml (getXmlFromBinary(data, sizeInBytes)); // take data as binary and turn it into xml
+    if (xml && xml->hasTagName(state.state.getType())) { // making sure its not the null pointer
+        state.replaceState(ValueTree::fromXml(*xml)); // *xml = dereference xml
+    }
 }
 
 //==============================================================================

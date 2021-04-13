@@ -16,10 +16,10 @@ GrainDelay::GrainDelay() {
 
 //ADSR::ADSR() {}
 
-// This is delay in samples
-GrainDelay::GrainDelay(float delay) {
-    this->delay = delay;
-}
+// This is delay in samples, Do I need this?
+//GrainDelay::GrainDelay(float delay) {
+//    this->delay = delay;
+//}
 
 // Do I need processSignal and processSample?
 void GrainDelay::processSignal(float *signal, const int numSamples, const int channel){
@@ -34,19 +34,19 @@ void GrainDelay::processSignal(float *signal, const int numSamples, const int ch
 // Signal Processing Block -builds upon fractional delay
 float GrainDelay::processSample(float x, int channel){
     
-    if (delay < 1.f){
+    if (delaySamples < 1.f){
         return x;
     }
     else {
     
         // Delay Buffer - Grain Size in Samples
 //        int d1 = floor(delay + lfo);
-        int d1 = floor(delay);
+        int d1 = floor(delaySamples);
         
 //        int d2 = d1 + MAX_BUFFERSIZE/2; // how far should write be from read index?
         //int d2 = d1 + 1; // how far should write be from read index?
 
-        float g2 = delay - (float)d1; //fraction
+        float g2 = delaySamples - (float)d1; //fraction
 //        float g2 = delay - (float)d1;
         float g1 = 1.0f - g2;
         
@@ -62,6 +62,8 @@ float GrainDelay::processSample(float x, int channel){
         
         // Try both options here
         //float y =  g1 * delayBuffer[readIndex][channel] + g2 * delayBuffer[writeIndex][channel] * feedbackAmount;
+        
+        // Is g not the feedback Amount?
         float y = g1 * delayBuffer[index[channel]][channel] * feedbackAmount;
 
         delayBuffer[index[channel]][channel] = x;
@@ -78,7 +80,7 @@ float GrainDelay::processSample(float x, int channel){
         }
         
         // set wet/dry here since I have y and x?
-        //y *= wetDryAmount;
+        y *= wetDryAmount + (x * (1-wetDryAmount));
         //y -= x * wetValue;
 
     return y;
@@ -91,7 +93,7 @@ float GrainDelay::processSample(float x, int channel){
 
 void GrainDelay::setFs(float Fs) {
     this->Fs = Fs;
-    // delaySamples = round(Fs*delayMS/1000.f);
+     delaySamples = round(Fs*delayMS/1000.f);
 }
 
 void GrainDelay::setGrainSize(int grainSize){
@@ -102,18 +104,18 @@ void GrainDelay::setBPM(float newBPM) {
     bpm = newBPM;
 }
 
-void GrainDelay::setDelaySamples(float delay){
-    if (delay >= 1.f){
-        this->delay = delay;
+void GrainDelay::setDelaySamples(float delaySamples){
+    if (delaySamples >= 1.f){
+        this->delaySamples = delaySamples;
     }
     else{
-        this->delay = 0.f;
+        this->delaySamples = 0.f;
     }
 }
 
 void GrainDelay::setWetDryAmount(float newWetDryAmount){
     if (newWetDryAmount <= 1.0f)
-    wetDryAmount = newWetDryAmount;
+    this->wetDryAmount = newWetDryAmount;
 }
 
 void GrainDelay::setNoteDuration(NoteSelection newNoteSelection){
@@ -151,19 +153,19 @@ void GrainDelay::setNoteDuration(NoteSelection newNoteSelection){
     float beatSec = bpm * (1.f/60.f);
     float secBeat = 1.f/beatSec;
     float secNote = noteDuration * secBeat;
-    float sampNote = secNote * Fs;
-    //float msNote = secNote * 1000.f;
-    setDelaySamples(sampNote);
+//    float sampNote = secNote * Fs;
+    float msNote = secNote * 1000.f;
+    setDelayMS(msNote);
 }
 
 
-//void GrainDelay::setDelayMS(float newDelayMS) {
-//    if (newDelayMS <= 1000.f){
-//        delayMS = newDelayMS;
-//    }
-//    delayMS = newDelayMS;
-//    delaySamples = round(Fs*delayMS/1000.f);
-//}
+void GrainDelay::setDelayMS(float newDelayMS) {
+    if (newDelayMS <= 1000.f){
+        delayMS = newDelayMS;
+    }
+    delayMS = newDelayMS;
+    delaySamples = round(Fs*delayMS/1000.f);
+}
 
 //void ADSR::setParameters(float attack, float decay, float sustain, float release){
 //

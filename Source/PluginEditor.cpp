@@ -17,9 +17,9 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     setSize (400, 300);
     
     // Delay Time Slider
-    delayKnob.addListener(this);
+//    delayKnob.addListener(this);
     delayKnob.setBounds(12,45,125,125);
-    delayKnob.setValue(audioProcessor.delay);
+//    delayKnob.setValue(audioProcessor.delay);
     delayKnob.setRange(10.f, 1024.f, 1.f); //min,max,increment size
     delayKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 75, 25);
     delayKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -32,7 +32,7 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     addAndMakeVisible(delayLabel);
     
     // Not tempo-synced button
-    notTempoSyncButton.addListener(this);
+//    notTempoSyncButton.addListener(this);
     notTempoSyncButton.setBounds(35, 170, 100, 40);
     notTempoSyncButton.setButtonText("Sync off");
     notTempoSyncButton.setToggleState(!audioProcessor.tempoSyncd, dontSendNotification);
@@ -40,7 +40,7 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     addAndMakeVisible(notTempoSyncButton);
     
     // Tempo Sync button
-    tempoSyncButton.addListener(this);
+//    tempoSyncButton.addListener(this);
     tempoSyncButton.setBounds(35, 195, 100, 40);
     tempoSyncButton.setButtonText("Sync'd");
     tempoSyncButton.setToggleState(audioProcessor.tempoSyncd, dontSendNotification);
@@ -48,7 +48,7 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     addAndMakeVisible(tempoSyncButton);
     
     // Combo Box for a note selector
-    noteSelector.addListener(this);
+//    noteSelector.addListener(this);
     noteSelector.addItem("Half", 1);
     noteSelector.addItem("Quarter", 2);
     noteSelector.addItem("8th", 3);
@@ -61,9 +61,9 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     noteSelector.setEnabled(audioProcessor.tempoSyncd);
     
     // Knob for Feedback Amount
-    feedbackKnob.addListener(this);
+//    feedbackKnob.addListener(this);
     feedbackKnob.setBounds(170,25,70,70);
-    feedbackKnob.setValue(audioProcessor.feedbackAmount);
+//    feedbackKnob.setValue(audioProcessor.feedbackAmount);
     feedbackKnob.setRange(0.f, 100.f, 1.f); //min,max,increment size
     feedbackKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
     feedbackKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -76,9 +76,9 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     addAndMakeVisible(feedBackLabel);
     
     // Knob for wet/dry amount
-    wetDryKnob.addListener(this);
+//    wetDryKnob.addListener(this);
     wetDryKnob.setBounds(250, 25, 70, 70);
-    wetDryKnob.setValue(audioProcessor.wetDryAmount);
+//    wetDryKnob.setValue(audioProcessor.wetDryAmount);
     wetDryKnob.setRange(0.f, 100.f, 1.f);
     wetDryKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
     wetDryKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -91,9 +91,9 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     
     
     // Grain Size Slider
-    grainSizeKnob.addListener(this);
+//    grainSizeKnob.addListener(this);
     grainSizeKnob.setBounds(210,120,70,70);
-    grainSizeKnob.setValue(audioProcessor.grainSize);
+//    grainSizeKnob.setValue(audioProcessor.grainSize);
     grainSizeKnob.setRange(10.f, 1024.f, 1.f); //min,max,increment size
     grainSizeKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
     grainSizeKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -157,6 +157,21 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
 //    releaseLabel.setJustificationType(Justification::centredBottom);
 //    addAndMakeVisible(releaseLabel);
     
+    // Value Tree Sliders
+    sliderAttachments.emplace_back(new AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"delayMS",delayKnob));
+    sliderAttachments.emplace_back(new AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"grainSize",grainSizeKnob));
+    sliderAttachments.emplace_back(new AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"feedbackAmount",feedbackKnob));
+    sliderAttachments.emplace_back(new AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"wetDryAmount",wetDryKnob));
+    
+    // Value Tree Combobox + button
+    buttonAttachments.emplace_back(new AudioProcessorValueTreeState::ButtonAttachment(audioProcessor.state,"tempoSyncd",notTempoSyncButton));
+    buttonAttachments.emplace_back(new AudioProcessorValueTreeState::ButtonAttachment(audioProcessor.state,"tempoSyncd",tempoSyncButton));
+    comboBoxAttachments.emplace_back(new AudioProcessorValueTreeState::ComboBoxAttachment(audioProcessor.state,"noteSelect",noteSelector));
+
+
+    
+    
+    
 }
 
 
@@ -182,56 +197,56 @@ void GrainDelayAudioProcessorEditor::resized()
 }
 
 
-void GrainDelayAudioProcessorEditor::sliderValueChanged(Slider *slider) {
-    
-    if (slider == &delayKnob) {
-//        grainDelay.delay = delayKnob.getValue();
-        audioProcessor.delay = delayKnob.getValue();
-    }
-    if (slider == &feedbackKnob) {
-//        grainDelay.feedbackAmount = feedbackKnob.getValue();
-        audioProcessor.feedbackAmount = feedbackKnob.getValue();
-
-    }
-    if (slider == &grainSizeKnob) {
-        audioProcessor.grainSize = grainSizeKnob.getValue();
+//void GrainDelayAudioProcessorEditor::sliderValueChanged(Slider *slider) {
+//    
+//    if (slider == &delayKnob) {
+////        grainDelay.delay = delayKnob.getValue();
+//        audioProcessor.delay = delayKnob.getValue();
+//    }
+//    if (slider == &feedbackKnob) {
+////        grainDelay.feedbackAmount = feedbackKnob.getValue();
+//        audioProcessor.feedbackAmount = feedbackKnob.getValue();
+//
+//    }
+//    if (slider == &grainSizeKnob) {
 //        audioProcessor.grainSize = grainSizeKnob.getValue();
-    }
-    
-}
-
-void GrainDelayAudioProcessorEditor::buttonClicked(Button *button) {
-    if (button == &tempoSyncButton) {
-        audioProcessor.tempoSyncd = true;
-        delayKnob.setEnabled(false);
-        noteSelector.setEnabled(true); // when flipping the state, change what you want to be greyed out and not
-    }
-    if (button == &notTempoSyncButton) {
-        audioProcessor.tempoSyncd = false;
-        delayKnob.setEnabled(true);
-        noteSelector.setEnabled(false);
-    }
-}
-
-void GrainDelayAudioProcessorEditor::comboBoxChanged(ComboBox *comboBox) {
-    if (comboBox == &noteSelector) {
-        if (noteSelector.getSelectedId() == 1){
-            // half-note
-            audioProcessor.noteDuration = 2.f;
-        }
-        if (noteSelector.getSelectedId() == 2){
-            // Quarter
-            audioProcessor.noteDuration = 1.f;
-        }
-        if (noteSelector.getSelectedId() == 3){
-            // 8th
-            audioProcessor.noteDuration = 0.5f;
-        }
-        if (noteSelector.getSelectedId() == 4){
-            // 16th
-            audioProcessor.noteDuration = 0.25f;
-        }
-    }
-}
+////        audioProcessor.grainSize = grainSizeKnob.getValue();
+//    }
+//    
+//}
+//
+//void GrainDelayAudioProcessorEditor::buttonClicked(Button *button) {
+//    if (button == &tempoSyncButton) {
+//        audioProcessor.tempoSyncd = true;
+//        delayKnob.setEnabled(false);
+//        noteSelector.setEnabled(true); // when flipping the state, change what you want to be greyed out and not
+//    }
+//    if (button == &notTempoSyncButton) {
+//        audioProcessor.tempoSyncd = false;
+//        delayKnob.setEnabled(true);
+//        noteSelector.setEnabled(false);
+//    }
+//}
+//
+//void GrainDelayAudioProcessorEditor::comboBoxChanged(ComboBox *comboBox) {
+//    if (comboBox == &noteSelector) {
+//        if (noteSelector.getSelectedId() == 1){
+//            // half-note
+//            audioProcessor.noteDuration = 2.f;
+//        }
+//        if (noteSelector.getSelectedId() == 2){
+//            // Quarter
+//            audioProcessor.noteDuration = 1.f;
+//        }
+//        if (noteSelector.getSelectedId() == 3){
+//            // 8th
+//            audioProcessor.noteDuration = 0.5f;
+//        }
+//        if (noteSelector.getSelectedId() == 4){
+//            // 16th
+//            audioProcessor.noteDuration = 0.25f;
+//        }
+//    }
+//}
 
 

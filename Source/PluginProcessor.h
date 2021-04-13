@@ -54,19 +54,25 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    float delay = 100.f; //Samples
+    float delayMS = 100.f;
     float noteDuration = 1.f;
     GrainDelay::NoteSelection noteSelect = GrainDelay::NoteSelection::QUARTER;
     bool tempoSyncd = true;
     
-    float feedbackAmount = 50.f;
-    float wetDryAmount = 1.f; // [0-100%]
-    int grainSize = 1024.f;
+//    float feedbackAmount = 50.f;
+//    float wetDryAmount = 1.f; // [0-100%]
+//    int grainSize = 1024.f;
     // ADSR hard coded lengths
-    float adsrAttack = 10.f;
-    float adsrDecay = 10.f;
-    float adsrSustain = 100.f;
-    float adsrRelease = 500.f;
+//    float adsrAttack = 10.f;
+//    float adsrDecay = 10.f;
+//    float adsrSustain = 100.f;
+//    float adsrRelease = 500.f;
+    
+    // Begin value tree state code
+    AudioProcessorValueTreeState state; // state that contains all the attributes of plugin
+    // Calling function for parameter layout that belongs to this value
+    AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    
 
 private:
     

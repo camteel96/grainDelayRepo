@@ -35,7 +35,7 @@ public:
     
     void setFs(float Fs);
     
-    //void setDelayMS(float newDelayMS);
+    void setDelayMS(float newDelayMS);
     void setDelaySamples(float delay);
     
     void setGrainSize(int grainSize);
@@ -57,17 +57,13 @@ public:
     
 private:
     
-    float delay = 5.f; // samples
+    float Fs = 48000.f;
+    
+    float delayMS = 100.f;
+    float delaySamples = round(Fs*delayMS/1000.f); // samples
     float feedbackAmount = 0.5f; // [0-1.0]
     int grainSize = 1024;
     float wetDryAmount = 1.00f; //[0-100%]
-//    float delay = 5.f; // samples
-//    float feedbackAmount = 0.5f; // [0-1.0]
-//    int grainSize = MAX_BUFFERSIZE;
-//    float wetDryAmount = 1.00f; //[0-100%]
-
-    
-    float Fs = 48000.f;
     
     float bpm = 120.f;
     
@@ -87,9 +83,9 @@ private:
     int index[2] = {0};
     
     //ADSR
-    juce::ADSR adsr;
-    juce::ADSR::Parameters adsrParams;
-    
+//    juce::ADSR adsr;
+//    juce::ADSR::Parameters adsrParams;
+//
     
     
     

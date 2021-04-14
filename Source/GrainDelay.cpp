@@ -14,8 +14,6 @@
 GrainDelay::GrainDelay() {
 }
 
-//ADSR::ADSR() {}
-
 // This is delay in samples, Do I need this?
 //GrainDelay::GrainDelay(float delay) {
 //    this->delay = delay;
@@ -39,37 +37,12 @@ float GrainDelay::processSample(float x, int channel){
     }
     else {
     
-        // Delay Buffer - Grain Size in Samples
-//        int d1 = floor(delay + lfo);
-        int d1 = floor(delaySamples);
-        
-//        int d2 = d1 + MAX_BUFFERSIZE/2; // how far should write be from read index?
-        //int d2 = d1 + 1; // how far should write be from read index?
-
-        float g2 = delaySamples - (float)d1; //fraction
-//        float g2 = delay - (float)d1;
-        float g1 = 1.0f - g2;
-        
-//        int readIndex = index[channel] - d1;
-//        if (readIndex < 0){
-//            readIndex += MAX_BUFFERSIZE;
-//        }
-//
-//        int writeIndex = index[channel] - d2;
-//        if (writeIndex < 0) {
-//            writeIndex += MAX_BUFFERSIZE;
-//        }
-        
         // Try both options here
         //float y =  g1 * delayBuffer[readIndex][channel] + g2 * delayBuffer[writeIndex][channel] * feedbackAmount;
         
-        // Is g not the feedback Amount?
-        float y = g1 * delayBuffer[index[channel]][channel] * feedbackAmount;
-
+        float y = x + delayBuffer[index[channel]][channel] * feedbackAmount;
+        
         delayBuffer[index[channel]][channel] = x;
-//        writeIndex = x;
-//        readIndex++;
-//        writeIndex++;
 
         // I think here is where I can alter my grain Size without changing size of the array
         if (index[channel] < grainSize){
@@ -80,16 +53,12 @@ float GrainDelay::processSample(float x, int channel){
         }
         
         // set wet/dry here since I have y and x?
-        y *= wetDryAmount + (x * (1-wetDryAmount));
-        //y -= x * wetValue;
+        y = (y * wetDryAmount) + (x * (1-wetDryAmount));
 
     return y;
         
     }
 }
-
-//Attempting to Apply ADSR
-//ADSR::applyEnvelopeToBuffer(AudioBuffer<float> *delayBuffer, int n, int numSamples);
 
 void GrainDelay::setFs(float Fs) {
     this->Fs = Fs;
@@ -118,29 +87,30 @@ void GrainDelay::setWetDryAmount(float newWetDryAmount){
     this->wetDryAmount = newWetDryAmount;
 }
 
-void GrainDelay::setNoteDuration(NoteSelection newNoteSelection){
+void GrainDelay::setNoteDuration(int newNoteSelection){
     
-    noteSelect = newNoteSelection;
     //noteDuration = newNoteDuration;
     
-    switch (noteSelect) {
-        case WHOLE:
+    
+    // case 0 = whole note, 1 = half note,,,,, put down there
+    switch (newNoteSelection) {
+        case 0:
             noteDuration = 4.0f;
             break;
             
-        case HALF:
+        case 1:
             noteDuration = 2.0;
             break;
             
-        case QUARTER:
+        case 2:
             noteDuration = 1.0f;
             break;
             
-        case EIGHTH:
+        case 3:
             noteDuration = 0.5f;
             break;
             
-        case SIXTEENTH:
+        case 4:
             noteDuration = 0.25f;
             break;
             
@@ -164,13 +134,6 @@ void GrainDelay::setDelayMS(float newDelayMS) {
         delayMS = newDelayMS;
     }
     delayMS = newDelayMS;
-    delaySamples = round(Fs*delayMS/1000.f);
+    grainSize = round(Fs*delayMS/1000.f); // what were using for delay
 }
 
-//void ADSR::setParameters(float attack, float decay, float sustain, float release){
-//
-//
-//
-//
-//
-//}

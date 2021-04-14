@@ -4,8 +4,6 @@
               displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="ZnlI9z" name="GrainDelay">
     <GROUP id="{887A6A84-3758-32E0-E592-70D2DF495583}" name="Source">
-      <FILE id="w9APje" name="Envelope.cpp" compile="1" resource="0" file="Source/Envelope.cpp"/>
-      <FILE id="b4TqDj" name="Envelope.h" compile="0" resource="0" file="Source/Envelope.h"/>
       <FILE id="bKICq9" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="qKIaIb" name="GrainDelay.cpp" compile="1" resource="0" file="Source/GrainDelay.cpp"/>

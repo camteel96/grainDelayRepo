@@ -43,30 +43,20 @@ private:
     // I want to pass in variables from my grainDelay class to my knobs, so do I do it this way?
     GrainDelay grainDelay;
     
-    
     // create instances of knobs and sliders
     Slider delayKnob;
     ComboBox noteSelector;
     Slider feedbackKnob;
     Slider wetDryKnob;
     Slider grainSizeKnob;
-    Slider adsrAttack;
-    Slider adsrDecay;
-    Slider adsrSustain;
-    Slider adsrRelease;
     
     Label delayLabel;
     Label feedBackLabel;
     Label wetDryLabel;
     Label grainSizeLabel;
-    
-//    Label attackLabel;
-//    Label decayLabel;
-//    Label sustainLabel;
-//    Label releaseLabel;
-    
+
     ToggleButton tempoSyncButton;
-    ToggleButton notTempoSyncButton;
+//    ToggleButton notTempoSyncButton;
     
 public:
     // Need to make slider attachment - by putting it at the bottom it gets destroyed first -destorys things from bottom to top in this window.

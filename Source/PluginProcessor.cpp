@@ -31,12 +31,19 @@ GrainDelayAudioProcessor::~GrainDelayAudioProcessor()
 AudioProcessorValueTreeState::ParameterLayout GrainDelayAudioProcessor::createParameterLayout()
 {
     std::vector<std::unique_ptr<RangedAudioParameter>> params; // syntax for parameter value, pointer destroys itself when we're done with it
-    
+    StringArray myChoices;
+    myChoices.add("half");
+    myChoices.add("quarter");
+    myChoices.add("eighth");
+    myChoices.add("sixteenth");
     // make new audio parameter float for our delay knob
     params.push_back(std::make_unique<AudioParameterFloat> ("delayMS","Delay",1.f,1000.f,1.f));
     params.push_back(std::make_unique<AudioParameterFloat> ("grainSize","Grain Size",1.f,1024.f,1.f));
     params.push_back(std::make_unique<AudioParameterFloat> ("wetDryAmount","Wet / Dry",0.f,1.f,.01f));
     params.push_back(std::make_unique<AudioParameterFloat> ("feedbackAmount","Feedback",0.f,100.f,1.f));
+    params.push_back(std::make_unique<AudioParameterBool> ("tempoSyncd","Tempo Sync'd",false));
+    params.push_back(std::make_unique<AudioParameterChoice> ("noteSelect", "Note Selector", myChoices, 1));
+
 
 
     
@@ -113,7 +120,7 @@ void GrainDelayAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
 //    spec.maximumBlockSize = samplesPerBlock;
 //    spec.numChannels = 2;
 //    grainDelay.prepare(spec);
- //   grainDelay.setFs(sampleRate);
+    grainDelay.setFs(sampleRate);
 }
 
 void GrainDelayAudioProcessor::releaseResources()
@@ -152,15 +159,10 @@ void GrainDelayAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
+    bool tempoSyncd = (bool) state.getRawParameterValue("tempoSyncd"); // takes value and turns it into a bool
     if (tempoSyncd){
         playHead = this->getPlayHead();
         playHead->getCurrentPosition(currentPositionInfo);
@@ -171,14 +173,14 @@ void GrainDelayAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
             grainDelay.setBPM(newBPM);
             bpm = newBPM;
         }
+        int noteSelect = (int)*state.getRawParameterValue("noteSelect");
         grainDelay.setNoteDuration(noteSelect);
     }
     else{
+        float delayMS = *state.getRawParameterValue("grainSize");
         grainDelay.setDelayMS(delayMS);
     }
 
-    
-    
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
 //        auto* channelData = buffer.getWritePointer (channel);
@@ -189,10 +191,6 @@ void GrainDelayAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
         }
     }
 }
-
-//void ADSR::applyEnvelopeToBuffer(AudioBuffer<float>, int n, int numSamples) {
-//    
-//}
 
 //==============================================================================
 bool GrainDelayAudioProcessor::hasEditor() const

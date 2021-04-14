@@ -33,17 +33,17 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     
     // Not tempo-synced button
 //    notTempoSyncButton.addListener(this);
-    notTempoSyncButton.setBounds(35, 170, 100, 40);
-    notTempoSyncButton.setButtonText("Sync off");
-    notTempoSyncButton.setToggleState(!audioProcessor.tempoSyncd, dontSendNotification);
-    notTempoSyncButton.setRadioGroupId(1);
-    addAndMakeVisible(notTempoSyncButton);
+//    notTempoSyncButton.setBounds(35, 170, 100, 40);
+//    notTempoSyncButton.setButtonText("Sync off");
+//    notTempoSyncButton.setToggleState(!audioProcessor.tempoSyncd, dontSendNotification);
+//    notTempoSyncButton.setRadioGroupId(1);
+//    addAndMakeVisible(notTempoSyncButton);
     
     // Tempo Sync button
 //    tempoSyncButton.addListener(this);
     tempoSyncButton.setBounds(35, 195, 100, 40);
     tempoSyncButton.setButtonText("Sync'd");
-    tempoSyncButton.setToggleState(audioProcessor.tempoSyncd, dontSendNotification);
+//    tempoSyncButton.setToggleState(audioProcessor.tempoSyncd, dontSendNotification);
     tempoSyncButton.setRadioGroupId(1); // listens to 'not tempo synced button' and they turn each other off
     addAndMakeVisible(tempoSyncButton);
     
@@ -57,8 +57,8 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     noteSelector.setBounds(25, 235, 100, 40);
     addAndMakeVisible(noteSelector);
     
-    delayKnob.setEnabled(!audioProcessor.tempoSyncd);
-    noteSelector.setEnabled(audioProcessor.tempoSyncd);
+//    delayKnob.setEnabled(!audioProcessor.tempoSyncd);
+//    noteSelector.setEnabled(audioProcessor.tempoSyncd);
     
     // Knob for Feedback Amount
 //    feedbackKnob.addListener(this);
@@ -68,7 +68,7 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     feedbackKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
     feedbackKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     addAndMakeVisible(feedbackKnob);
-        // Feedback label
+        // Feedback labelq
     feedBackLabel.setText("Feedback", dontSendNotification);
     feedBackLabel.attachToComponent(&feedbackKnob, false);
     feedBackLabel.setJustificationType(Justification::centredBottom);
@@ -104,59 +104,6 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     grainSizeLabel.setJustificationType(Justification::centredBottom);
     addAndMakeVisible(grainSizeLabel);
     
-//        // Multiple Sliders for ADSR Settings //
-//    adsrAttack.addListener(this);
-//    adsrAttack.setBounds(140,215,80,80);
-//    adsrAttack.setValue(audioProcessor.adsrAttack);
-//    adsrAttack.setRange(10.f, 100.f, 1.f); //min,max,increment size
-//    adsrAttack.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
-//    adsrAttack.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-//    addAndMakeVisible(adsrAttack);
-//        // Attack Label
-//    attackLabel.setText("Attack", dontSendNotification);
-//    attackLabel.attachToComponent(&adsrAttack, false);
-//    attackLabel.setJustificationType(Justification::centredBottom);
-//    addAndMakeVisible(attackLabel);
-//
-//    adsrDecay.addListener(this);
-//    adsrDecay.setBounds(195,215,80,80);
-//    adsrDecay.setValue(audioProcessor.adsrDecay);
-//    adsrDecay.setRange(10.f, 100.f, 1.f); //min,max,increment size
-//    adsrDecay.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
-//    adsrDecay.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-//    addAndMakeVisible(adsrDecay);
-//        // Decay Label
-//    decayLabel.setText("Decay", dontSendNotification);
-//    decayLabel.attachToComponent(&adsrDecay, false);
-//    decayLabel.setJustificationType(Justification::centredBottom);
-//    addAndMakeVisible(decayLabel);
-//
-//    adsrSustain.addListener(this);
-//    adsrSustain.setBounds(250,215,80,80);
-//    adsrSustain.setValue(audioProcessor.adsrSustain);
-//    adsrSustain.setRange(10.f, 500.f, 1.f); //min,max,increment size
-//    adsrSustain.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
-//    adsrSustain.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-//    addAndMakeVisible(adsrSustain);
-//        // Sustain Label
-//    sustainLabel.setText("Sustain", dontSendNotification);
-//    sustainLabel.attachToComponent(&adsrSustain, false);
-//    sustainLabel.setJustificationType(Justification::centredBottom);
-//    addAndMakeVisible(sustainLabel);
-//
-//    adsrRelease.addListener(this);
-//    adsrRelease.setBounds(305,215,80,80);
-//    adsrRelease.setValue(audioProcessor.adsrRelease);
-//    adsrRelease.setRange(10.f, 1024.f, 1.f); //min,max,increment size
-//    adsrRelease.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
-//    adsrRelease.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-//    addAndMakeVisible(adsrRelease);
-//        // Release Label
-//    releaseLabel.setText("Release", dontSendNotification);
-//    releaseLabel.attachToComponent(&adsrRelease, false);
-//    releaseLabel.setJustificationType(Justification::centredBottom);
-//    addAndMakeVisible(releaseLabel);
-    
     // Value Tree Sliders
     sliderAttachments.emplace_back(new AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"delayMS",delayKnob));
     sliderAttachments.emplace_back(new AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"grainSize",grainSizeKnob));
@@ -164,16 +111,10 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     sliderAttachments.emplace_back(new AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"wetDryAmount",wetDryKnob));
     
     // Value Tree Combobox + button
-    buttonAttachments.emplace_back(new AudioProcessorValueTreeState::ButtonAttachment(audioProcessor.state,"tempoSyncd",notTempoSyncButton));
     buttonAttachments.emplace_back(new AudioProcessorValueTreeState::ButtonAttachment(audioProcessor.state,"tempoSyncd",tempoSyncButton));
     comboBoxAttachments.emplace_back(new AudioProcessorValueTreeState::ComboBoxAttachment(audioProcessor.state,"noteSelect",noteSelector));
 
-
-    
-    
-    
 }
-
 
 GrainDelayAudioProcessorEditor::~GrainDelayAudioProcessorEditor()
 {
@@ -187,7 +128,7 @@ void GrainDelayAudioProcessorEditor::paint (juce::Graphics& g)
 
     g.setColour (juce::Colours::teal);
     g.setFont (20.0f);
-    g.drawFittedText ("My GrainDelay Plugin", getLocalBounds(), juce::Justification::centredTop, 1);
+    g.drawFittedText ("Grain Delay", getLocalBounds(), juce::Justification::centredTop, 1);
 }
 
 void GrainDelayAudioProcessorEditor::resized()

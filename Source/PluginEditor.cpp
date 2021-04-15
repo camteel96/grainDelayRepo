@@ -16,7 +16,6 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     setSize (400, 300);
     
     // Delay Time Slider
-    delayKnob.setBounds(12,45,125,125);
     delayKnob.setRange(10.f, 1024.f, 1.f); //min,max,increment size
     delayKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 75, 25);
     delayKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -51,8 +50,7 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     addAndMakeVisible(noteSelector);
     
     // Knob for Feedback Amount
-    feedbackKnob.setBounds(170,25,70,70);
-    feedbackKnob.setRange(0.f, 100.f, 1.f); //min,max,increment size
+    feedbackKnob.setRange(0.f, 1.f, .01f); //min,max,increment size
     feedbackKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
     feedbackKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     addAndMakeVisible(feedbackKnob);
@@ -64,13 +62,12 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     addAndMakeVisible(feedBackLabel);
     
     // Knob for wet/dry amount
-    wetDryKnob.setBounds(250, 25, 70, 70);
     wetDryKnob.setRange(0.f, 1.f, .01f);
     wetDryKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
     wetDryKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     addAndMakeVisible(wetDryKnob);
         // wet/dry label
-    wetDryLabel.setText("Wet / Dry", dontSendNotification);
+    wetDryLabel.setText("Dry / Wet", dontSendNotification);
     wetDryLabel.attachToComponent(&wetDryKnob, false);
     wetDryLabel.setJustificationType(Justification::centredBottom);
     addAndMakeVisible(feedBackLabel);
@@ -117,6 +114,9 @@ void GrainDelayAudioProcessorEditor::resized()
 {
     tempoSyncButton.setBounds(35, 195, 100, 40);
     grainSizeKnob.setBounds(210,150,100,100);
+    wetDryKnob.setBounds(250, 25, 70, 70);
+    feedbackKnob.setBounds(170,25,70,70);
+    delayKnob.setBounds(12,45,125,125);
 
 
 }

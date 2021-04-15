@@ -37,9 +37,9 @@ float GrainDelay::processSample(float x, int channel){
     }
     else {
         
-        float y = x + delayBuffer[index[channel]][channel] * feedbackAmount;
-        
-        delayBuffer[index[channel]][channel] = x;
+        float y = x + delayBuffer[index[channel]][channel];
+
+        delayBuffer[index[channel]][channel] = y * feedbackAmount;
 
         if (index[channel] < grainSize){
             index[channel]++;

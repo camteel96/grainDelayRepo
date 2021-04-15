@@ -42,7 +42,7 @@ AudioProcessorValueTreeState::ParameterLayout GrainDelayAudioProcessor::createPa
     params.push_back(std::make_unique<juce::AudioParameterFloat> ("delayMS","Delay",1.f,1000.f,1.f));
     params.push_back(std::make_unique<juce::AudioParameterFloat> ("grainSize","Grain Size",1.f,1024.f,1.f));
     params.push_back(std::make_unique<juce::AudioParameterFloat> ("wetDryAmount","Wet / Dry",0.f,1.f,.01f));
-    params.push_back(std::make_unique<juce::AudioParameterFloat> ("feedbackAmount","Feedback",0.f,100.f,1.f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat> ("feedbackAmount","Feedback",0.f,1.f,.01f));
     params.push_back(std::make_unique<juce::AudioParameterBool> ("tempoSyncd","Tempo Sync'd",false));
     params.push_back(std::make_unique<juce::AudioParameterChoice> ("noteSelect", "Note Selector", myChoices, 1));
 

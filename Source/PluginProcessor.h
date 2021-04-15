@@ -66,10 +66,8 @@ public:
 private:
     
     AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
-
     
-    GrainDelay grainDelay;
-    
+    GrainDelay grainDelay; 
     
     AudioPlayHead* playHead;
     AudioPlayHead::CurrentPositionInfo currentPositionInfo;

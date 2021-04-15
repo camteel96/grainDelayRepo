@@ -27,16 +27,12 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     delayLabel.setBorderSize(BorderSize<int>(1));
     addAndMakeVisible(delayLabel);
     
-    // Not tempo-synced button
-//    notTempoSyncButton.setBounds(35, 170, 100, 40);
-//    notTempoSyncButton.setButtonText("Sync off");
-//    notTempoSyncButton.setToggleState(!audioProcessor.tempoSyncd, dontSendNotification);
-//    notTempoSyncButton.setRadioGroupId(1);
-//    addAndMakeVisible(notTempoSyncButton);
-    
     // Tempo Sync button
     tempoSyncButton.setButtonText("Sync'd");
-    tempoSyncButton.setRadioGroupId(1); // listens to 'not tempo synced button' and they turn each other off
+    tempoSyncButton.setColour(TextButton::buttonColourId, Colours::dimgrey);
+    tempoSyncButton.setColour(TextButton::buttonOnColourId, Colours::orange);
+    tempoSyncButton.setClickingTogglesState(true);
+    tempoSyncButton.onClick = [this]() {};
     addAndMakeVisible(tempoSyncButton);
     
     // Combo Box for a note selector
@@ -45,6 +41,7 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     noteSelector.addItem("8th", 3);
     noteSelector.addItem("16th", 4);
     noteSelector.addItem("32nd", 5);
+    noteSelector.addItem("64th",6);
     noteSelector.setSelectedId(2); // Which note do I want to be initialized upon the plugin opening?
     noteSelector.setBounds(25, 235, 100, 40);
     addAndMakeVisible(noteSelector);
@@ -90,7 +87,9 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     sliderAttachments.emplace_back(new AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"wetDryAmount",wetDryKnob));
     
     // Value Tree Combobox + button
-    buttonAttachments.emplace_back(new AudioProcessorValueTreeState::ButtonAttachment(audioProcessor.state,"tempoSyncd",tempoSyncButton));
+//    buttonAttachments.emplace_back(new AudioProcessorValueTreeState::ButtonAttachment(audioProcessor.state,"notTempoSyncd",notTempoSyncButton));
+//    buttonAttachments.emplace_back(new AudioProcessorValueTreeState::ButtonAttachment(audioProcessor.state,"tempoSyncd",tempoSyncButton));
+    buttonAttachment = std::make_unique<AudioProcessorValueTreeState::ButtonAttachment> (audioProcessor.state,"tempoSyncd",tempoSyncButton);
     comboBoxAttachments.emplace_back(new AudioProcessorValueTreeState::ComboBoxAttachment(audioProcessor.state,"noteSelect",noteSelector));
 
 }
@@ -112,66 +111,14 @@ void GrainDelayAudioProcessorEditor::paint (juce::Graphics& g)
 
 void GrainDelayAudioProcessorEditor::resized()
 {
+    notTempoSyncButton.setBounds(35, 170, 100, 40);
     tempoSyncButton.setBounds(35, 195, 100, 40);
-    grainSizeKnob.setBounds(210,150,100,100);
-    wetDryKnob.setBounds(250, 25, 70, 70);
-    feedbackKnob.setBounds(170,25,70,70);
+    grainSizeKnob.setBounds(210,175,100,100);
+    wetDryKnob.setBounds(250, 50, 100, 100);
+    feedbackKnob.setBounds(170,50,100,100);
     delayKnob.setBounds(12,45,125,125);
-
 
 }
 
-
-//void GrainDelayAudioProcessorEditor::sliderValueChanged(Slider *slider) {
-//    
-//    if (slider == &delayKnob) {
-////        grainDelay.delay = delayKnob.getValue();
-//        audioProcessor.delay = delayKnob.getValue();
-//    }
-//    if (slider == &feedbackKnob) {
-////        grainDelay.feedbackAmount = feedbackKnob.getValue();
-//        audioProcessor.feedbackAmount = feedbackKnob.getValue();
-//
-//    }
-//    if (slider == &grainSizeKnob) {
-//        audioProcessor.grainSize = grainSizeKnob.getValue();
-////        audioProcessor.grainSize = grainSizeKnob.getValue();
-//    }
-//    
-//}
-//
-//void GrainDelayAudioProcessorEditor::buttonClicked(Button *button) {
-//    if (button == &tempoSyncButton) {
-//        audioProcessor.tempoSyncd = true;
-//        delayKnob.setEnabled(false);
-//        noteSelector.setEnabled(true); // when flipping the state, change what you want to be greyed out and not
-//    }
-//    if (button == &notTempoSyncButton) {
-//        audioProcessor.tempoSyncd = false;
-//        delayKnob.setEnabled(true);
-//        noteSelector.setEnabled(false);
-//    }
-//}
-//
-//void GrainDelayAudioProcessorEditor::comboBoxChanged(ComboBox *comboBox) {
-//    if (comboBox == &noteSelector) {
-//        if (noteSelector.getSelectedId() == 1){
-//            // half-note
-//            audioProcessor.noteDuration = 2.f;
-//        }
-//        if (noteSelector.getSelectedId() == 2){
-//            // Quarter
-//            audioProcessor.noteDuration = 1.f;
-//        }
-//        if (noteSelector.getSelectedId() == 3){
-//            // 8th
-//            audioProcessor.noteDuration = 0.5f;
-//        }
-//        if (noteSelector.getSelectedId() == 4){
-//            // 16th
-//            audioProcessor.noteDuration = 0.25f;
-//        }
-//    }
-//}
 
 

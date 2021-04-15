@@ -33,7 +33,7 @@ public:
     void setFs(float newFs);
     
     void setDelayMS(float newDelayMS);
-    void setDelaySamples(float newDelaySamples);
+//    void setDelaySamples(float newDelaySamples);
     
     void setFeedbackAmount(float newFeedbackAmount);
     
@@ -51,7 +51,7 @@ private:
     float Fs = 48000.f;
     
     float delayMS = 100.f;
-    float delaySamples = round(Fs*delayMS/1000.f); // samples
+//    float delaySamples = round(Fs*delayMS/1000.f); // samples
 
     float feedbackAmount = 0.5f; // [0-1.0]
     int grainSize = 1024;

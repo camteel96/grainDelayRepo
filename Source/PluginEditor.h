@@ -25,9 +25,6 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     
-//    void sliderValueChanged(Slider * slider) override;
-//    void buttonClicked(Button * button) override;
-//    void comboBoxChanged(ComboBox * comboBox) override;
     
 private:
     // This reference is provided as a quick way for your editor to
@@ -54,7 +51,8 @@ public:
     // this is the one thing that funnels all your sliders to the value tree, dont need attachment for every slider, but if you other have types of interface options (boxes), youd need other attachments here
     // order is based on reverse order of our constructor, attachments should be destroyed befroe slide - could run into an issue without taht last stpe
     std::vector<std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment>> sliderAttachments;
-    std::vector<std::unique_ptr<AudioProcessorValueTreeState::ButtonAttachment>> buttonAttachments;
+//    std::vector<std::unique_ptr<AudioProcessorValueTreeState::ButtonAttachment>> buttonAttachments;
+    std::unique_ptr<AudioProcessorValueTreeState::ButtonAttachment> buttonAttachment;
     std::vector<std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment>> comboBoxAttachments;
 
 

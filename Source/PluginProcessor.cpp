@@ -37,6 +37,7 @@ AudioProcessorValueTreeState::ParameterLayout GrainDelayAudioProcessor::createPa
     myChoices.add("eighth");
     myChoices.add("sixteenth");
     myChoices.add("thirtysecond");
+    myChoices.add("sixtyfourth");
 
     // make new audio parameter float for our delay knob
     params.push_back(std::make_unique<juce::AudioParameterFloat> ("delayMS","Delay",1.f,1000.f,1.f));
@@ -153,21 +154,11 @@ void GrainDelayAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-    
-//    // From audio programmer
-//    auto g = state.getRawParameterValue("grainSize");
-//    g->load();
-//    auto h = state.getRawParameterValue("delayMS");
-//    h->load();
-//    auto i = state.getRawParameterValue("feedbackAmount");
-//    i->load();
-//    auto j = state.getRawParameterValue("wetDryAmount");
-//    j->load();
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    bool tempoSyncd = (bool) state.getRawParameterValue("tempoSyncd"); // takes value and turns it into a bool
+    bool tempoSyncd = (bool) *state.getRawParameterValue("tempoSyncd"); // takes value and turns it into a bool
     if (tempoSyncd){
         playHead = this->getPlayHead();
         playHead->getCurrentPosition(currentPositionInfo);
@@ -182,15 +173,10 @@ void GrainDelayAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
         grainDelay.setNoteDuration(noteSelect);
     }
     else{
-        //float delayMS = *state.getRawParameterValue("grainSize");
-        //float delayMS = *state.getRawParameterValue("delayMS");
-        auto & delayMS = *state.getRawParameterValue("delayMS");
-        auto & grainSize = *state.getRawParameterValue("grainSize");
-//        float grainSize = *state.getRawParameterValue("grainSize");
-//        float feedbackAmount = *state.getRawParameterValue("feedbackAmount");
-//        float wetDryAmount = *state.getRawParameterValue("wetDryAmount");
-        grainDelay.setGrainSize(grainSize);
-        grainDelay.setDelayMS(delayMS); 
+        auto & delaySliderValue = *state.getRawParameterValue("delayMS");
+        auto & grainSizeSliderValue = *state.getRawParameterValue("grainSize");
+        grainDelay.setGrainSize(grainSizeSliderValue);
+        grainDelay.setDelayMS(delaySliderValue);
     }
     
     auto & feedbackAmount = *state.getRawParameterValue("feedbackAmount");

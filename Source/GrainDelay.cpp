@@ -15,9 +15,6 @@ GrainDelay::GrainDelay() {
 }
 
 // This is delay in samples, Do I need this?
-//GrainDelay::GrainDelay(float delay) {
-//    this->delay = delay;
-//}
 
 // Do I need processSignal and processSample?
 void GrainDelay::processSignal(float *signal, const int numSamples, const int channel){
@@ -32,7 +29,7 @@ void GrainDelay::processSignal(float *signal, const int numSamples, const int ch
 // Signal Processing Block -builds upon fractional delay
 float GrainDelay::processSample(float x, int channel){
     
-    if (delaySamples < 1.f){
+    if (grainSize < 1.f){
         return x;
     }
     else {
@@ -57,7 +54,7 @@ float GrainDelay::processSample(float x, int channel){
 
 void GrainDelay::setFs(float newFs) {
      Fs = newFs;
-     delaySamples = round(Fs*delayMS/1000.f);
+//     delaySamples = round(Fs*delayMS/1000.f);
 }
 
 void GrainDelay::setGrainSize(int newGrainSize){
@@ -80,19 +77,15 @@ void GrainDelay::setFeedbackAmount(float newFeedbackAmount){
 //        this->delaySamples = 0.f;
 //    }
 //}
-void GrainDelay::setDelaySamples(float newDelaySamples){
-    if (newDelaySamples >= 1.f){
-        delaySamples = newDelaySamples;
-    }
-    else{
-        delaySamples = 0.f;
-    }
-}
-
-//void GrainDelay::setWetDryAmount(float newWetDryAmount){
-//    if (newWetDryAmount <= 1.0f)
-//    this->wetDryAmount = newWetDryAmount;
+//void GrainDelay::setDelaySamples(float newDelaySamples){
+//    if (newDelaySamples >= 1.f){
+//        delaySamples = newDelaySamples;
+//    }
+//    else{
+//        delaySamples = 0.f;
+//    }
 //}
+
 void GrainDelay::setWetDryAmount(float newWetDryAmount){
     if (newWetDryAmount <= 1.0f)
         wetDryAmount = newWetDryAmount;
@@ -125,6 +118,10 @@ void GrainDelay::setNoteDuration(int newNoteSelection){
             noteDuration = 0.125f;
             break;
             
+        case 6: // SIXTY-FOURTH
+            noteDuration = 0.0625f;
+            break;
+            
         default:
             noteDuration = 1.0f;
             break;
@@ -134,10 +131,10 @@ void GrainDelay::setNoteDuration(int newNoteSelection){
     float beatSec = bpm * (1.f/60.f);
     float secBeat = 1.f/beatSec;
     float secNote = noteDuration * secBeat;
-    float sampNote = secNote * Fs;
+//    float sampNote = secNote * Fs;
     float msNote = secNote * 1000.f;
     setDelayMS(msNote);
-    setDelaySamples(sampNote);
+//    setDelaySamples(sampNote);
 }
 
 

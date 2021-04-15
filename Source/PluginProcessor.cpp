@@ -36,17 +36,16 @@ AudioProcessorValueTreeState::ParameterLayout GrainDelayAudioProcessor::createPa
     myChoices.add("quarter");
     myChoices.add("eighth");
     myChoices.add("sixteenth");
+    myChoices.add("thirtysecond");
+
     // make new audio parameter float for our delay knob
-    params.push_back(std::make_unique<AudioParameterFloat> ("delayMS","Delay",1.f,1000.f,1.f));
-    params.push_back(std::make_unique<AudioParameterFloat> ("grainSize","Grain Size",1.f,1024.f,1.f));
-    params.push_back(std::make_unique<AudioParameterFloat> ("wetDryAmount","Wet / Dry",0.f,1.f,.01f));
-    params.push_back(std::make_unique<AudioParameterFloat> ("feedbackAmount","Feedback",0.f,100.f,1.f));
-    params.push_back(std::make_unique<AudioParameterBool> ("tempoSyncd","Tempo Sync'd",false));
-    params.push_back(std::make_unique<AudioParameterChoice> ("noteSelect", "Note Selector", myChoices, 1));
+    params.push_back(std::make_unique<juce::AudioParameterFloat> ("delayMS","Delay",1.f,1000.f,1.f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat> ("grainSize","Grain Size",1.f,1024.f,1.f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat> ("wetDryAmount","Wet / Dry",0.f,1.f,.01f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat> ("feedbackAmount","Feedback",0.f,100.f,1.f));
+    params.push_back(std::make_unique<juce::AudioParameterBool> ("tempoSyncd","Tempo Sync'd",false));
+    params.push_back(std::make_unique<juce::AudioParameterChoice> ("noteSelect", "Note Selector", myChoices, 1));
 
-
-
-    
     // we've got to return parameter layout, all of them in this case, go through all and terurn the whole set of them
     return {params.begin(), params.end()};
 }
@@ -116,10 +115,6 @@ void GrainDelayAudioProcessor::changeProgramName (int index, const juce::String&
 //==============================================================================
 void GrainDelayAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-//    spec.sampleRate = sampleRate;
-//    spec.maximumBlockSize = samplesPerBlock;
-//    spec.numChannels = 2;
-//    grainDelay.prepare(spec);
     grainDelay.setFs(sampleRate);
 }
 
@@ -158,6 +153,16 @@ void GrainDelayAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
+    
+//    // From audio programmer
+//    auto g = state.getRawParameterValue("grainSize");
+//    g->load();
+//    auto h = state.getRawParameterValue("delayMS");
+//    h->load();
+//    auto i = state.getRawParameterValue("feedbackAmount");
+//    i->load();
+//    auto j = state.getRawParameterValue("wetDryAmount");
+//    j->load();
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
@@ -177,9 +182,21 @@ void GrainDelayAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
         grainDelay.setNoteDuration(noteSelect);
     }
     else{
-        float delayMS = *state.getRawParameterValue("grainSize");
-        grainDelay.setDelayMS(delayMS);
+        //float delayMS = *state.getRawParameterValue("grainSize");
+        //float delayMS = *state.getRawParameterValue("delayMS");
+        auto & delayMS = *state.getRawParameterValue("delayMS");
+        auto & grainSize = *state.getRawParameterValue("grainSize");
+//        float grainSize = *state.getRawParameterValue("grainSize");
+//        float feedbackAmount = *state.getRawParameterValue("feedbackAmount");
+//        float wetDryAmount = *state.getRawParameterValue("wetDryAmount");
+        grainDelay.setGrainSize(grainSize);
+        grainDelay.setDelayMS(delayMS); 
     }
+    
+    auto & feedbackAmount = *state.getRawParameterValue("feedbackAmount");
+    auto & wetDryAmount = *state.getRawParameterValue("wetDryAmount");
+    grainDelay.setWetDryAmount(wetDryAmount);
+    grainDelay.setFeedbackAmount(feedbackAmount);
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {

@@ -36,15 +36,11 @@ float GrainDelay::processSample(float x, int channel){
         return x;
     }
     else {
-    
-        // Try both options here
-        //float y =  g1 * delayBuffer[readIndex][channel] + g2 * delayBuffer[writeIndex][channel] * feedbackAmount;
         
         float y = x + delayBuffer[index[channel]][channel] * feedbackAmount;
         
         delayBuffer[index[channel]][channel] = x;
 
-        // I think here is where I can alter my grain Size without changing size of the array
         if (index[channel] < grainSize){
             index[channel]++;
         }
@@ -52,7 +48,6 @@ float GrainDelay::processSample(float x, int channel){
             index[channel] = 0;
         }
         
-        // set wet/dry here since I have y and x?
         y = (y * wetDryAmount) + (x * (1-wetDryAmount));
 
     return y;
@@ -60,58 +55,74 @@ float GrainDelay::processSample(float x, int channel){
     }
 }
 
-void GrainDelay::setFs(float Fs) {
-    this->Fs = Fs;
+void GrainDelay::setFs(float newFs) {
+     Fs = newFs;
      delaySamples = round(Fs*delayMS/1000.f);
 }
 
-void GrainDelay::setGrainSize(int grainSize){
-    this->grainSize = grainSize;
+void GrainDelay::setGrainSize(int newGrainSize){
+    grainSize = newGrainSize;
 }
 
 void GrainDelay::setBPM(float newBPM) {
     bpm = newBPM;
 }
 
-void GrainDelay::setDelaySamples(float delaySamples){
-    if (delaySamples >= 1.f){
-        this->delaySamples = delaySamples;
+void GrainDelay::setFeedbackAmount(float newFeedbackAmount){
+    feedbackAmount = newFeedbackAmount;
+}
+
+//void GrainDelay::setDelaySamples(float delaySamples){
+//    if (delaySamples >= 1.f){
+//        this->delaySamples = delaySamples;
+//    }
+//    else{
+//        this->delaySamples = 0.f;
+//    }
+//}
+void GrainDelay::setDelaySamples(float newDelaySamples){
+    if (newDelaySamples >= 1.f){
+        delaySamples = newDelaySamples;
     }
     else{
-        this->delaySamples = 0.f;
+        delaySamples = 0.f;
     }
 }
 
+//void GrainDelay::setWetDryAmount(float newWetDryAmount){
+//    if (newWetDryAmount <= 1.0f)
+//    this->wetDryAmount = newWetDryAmount;
+//}
 void GrainDelay::setWetDryAmount(float newWetDryAmount){
     if (newWetDryAmount <= 1.0f)
-    this->wetDryAmount = newWetDryAmount;
+        wetDryAmount = newWetDryAmount;
 }
 
 void GrainDelay::setNoteDuration(int newNoteSelection){
     
-    //noteDuration = newNoteDuration;
-    
-    
-    // case 0 = whole note, 1 = half note,,,,, put down there
     switch (newNoteSelection) {
-        case 0:
+        case 0: // WHOLE
             noteDuration = 4.0f;
             break;
             
-        case 1:
+        case 1: // HALF
             noteDuration = 2.0;
             break;
             
-        case 2:
+        case 2: // QUARTER
             noteDuration = 1.0f;
             break;
             
-        case 3:
+        case 3: // EIGHTH
             noteDuration = 0.5f;
             break;
             
-        case 4:
+        case 4: // SIXTEENTH
             noteDuration = 0.25f;
+            break;
+            
+        case 5: // THIRTY-SECOND
+            noteDuration = 0.125f;
             break;
             
         default:
@@ -123,9 +134,10 @@ void GrainDelay::setNoteDuration(int newNoteSelection){
     float beatSec = bpm * (1.f/60.f);
     float secBeat = 1.f/beatSec;
     float secNote = noteDuration * secBeat;
-//    float sampNote = secNote * Fs;
+    float sampNote = secNote * Fs;
     float msNote = secNote * 1000.f;
     setDelayMS(msNote);
+    setDelaySamples(sampNote);
 }
 
 

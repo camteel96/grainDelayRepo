@@ -15,10 +15,6 @@
 /**
 */
 class GrainDelayAudioProcessorEditor : public juce::AudioProcessorEditor
-//                                       public juce::Slider::Listener,
-//                                       public::juce::Button::Listener,
-//                                       public::juce::ComboBox::Listener
-                                       //public::juce::Label::Listener
 
 {
 public:
@@ -33,16 +29,11 @@ public:
 //    void buttonClicked(Button * button) override;
 //    void comboBoxChanged(ComboBox * comboBox) override;
     
-    
-
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     GrainDelayAudioProcessor& audioProcessor;
-    
-    // I want to pass in variables from my grainDelay class to my knobs, so do I do it this way?
-    GrainDelay grainDelay;
-    
+        
     // create instances of knobs and sliders
     Slider delayKnob;
     ComboBox noteSelector;
@@ -56,7 +47,7 @@ private:
     Label grainSizeLabel;
 
     ToggleButton tempoSyncButton;
-//    ToggleButton notTempoSyncButton;
+    ToggleButton notTempoSyncButton;
     
 public:
     // Need to make slider attachment - by putting it at the bottom it gets destroyed first -destorys things from bottom to top in this window.

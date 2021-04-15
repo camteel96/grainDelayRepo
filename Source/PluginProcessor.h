@@ -53,25 +53,23 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
-    
-//    float delayMS = 100.f;
-//    float noteDuration = 1.f;
-//    GrainDelay::NoteSelection noteSelect = GrainDelay::NoteSelection::QUARTER; //ENUM
-//    bool tempoSyncd = true;
-    
-//    float feedbackAmount = 50.f;
-//    float wetDryAmount = 1.f; // [0-100%]
-//    int grainSize = 1024.f;
+
 
     // Begin value tree state code
+//    AudioProcessorValueTreeState state; // state that contains all the attributes of plugin
     AudioProcessorValueTreeState state; // state that contains all the attributes of plugin
+
     // Calling function for parameter layout that belongs to this value
-    AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+//    AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     
 
 private:
     
+    AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+
+    
     GrainDelay grainDelay;
+    
     
     AudioPlayHead* playHead;
     AudioPlayHead::CurrentPositionInfo currentPositionInfo;

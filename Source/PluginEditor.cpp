@@ -13,13 +13,10 @@
 GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    // Look up code to see what you can do to have some fun here! Use Tarr's code as the placeholder
     setSize (400, 300);
     
     // Delay Time Slider
-//    delayKnob.addListener(this);
     delayKnob.setBounds(12,45,125,125);
-//    delayKnob.setValue(audioProcessor.delay);
     delayKnob.setRange(10.f, 1024.f, 1.f); //min,max,increment size
     delayKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 75, 25);
     delayKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -32,7 +29,6 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     addAndMakeVisible(delayLabel);
     
     // Not tempo-synced button
-//    notTempoSyncButton.addListener(this);
 //    notTempoSyncButton.setBounds(35, 170, 100, 40);
 //    notTempoSyncButton.setButtonText("Sync off");
 //    notTempoSyncButton.setToggleState(!audioProcessor.tempoSyncd, dontSendNotification);
@@ -40,35 +36,27 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
 //    addAndMakeVisible(notTempoSyncButton);
     
     // Tempo Sync button
-//    tempoSyncButton.addListener(this);
-    tempoSyncButton.setBounds(35, 195, 100, 40);
     tempoSyncButton.setButtonText("Sync'd");
-//    tempoSyncButton.setToggleState(audioProcessor.tempoSyncd, dontSendNotification);
     tempoSyncButton.setRadioGroupId(1); // listens to 'not tempo synced button' and they turn each other off
     addAndMakeVisible(tempoSyncButton);
     
     // Combo Box for a note selector
-//    noteSelector.addListener(this);
     noteSelector.addItem("Half", 1);
     noteSelector.addItem("Quarter", 2);
     noteSelector.addItem("8th", 3);
     noteSelector.addItem("16th", 4);
+    noteSelector.addItem("32nd", 5);
     noteSelector.setSelectedId(2); // Which note do I want to be initialized upon the plugin opening?
     noteSelector.setBounds(25, 235, 100, 40);
     addAndMakeVisible(noteSelector);
     
-//    delayKnob.setEnabled(!audioProcessor.tempoSyncd);
-//    noteSelector.setEnabled(audioProcessor.tempoSyncd);
-    
     // Knob for Feedback Amount
-//    feedbackKnob.addListener(this);
     feedbackKnob.setBounds(170,25,70,70);
-//    feedbackKnob.setValue(audioProcessor.feedbackAmount);
     feedbackKnob.setRange(0.f, 100.f, 1.f); //min,max,increment size
     feedbackKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
     feedbackKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     addAndMakeVisible(feedbackKnob);
-        // Feedback labelq
+        // Feedback label
     feedBackLabel.setText("Feedback", dontSendNotification);
     feedBackLabel.attachToComponent(&feedbackKnob, false);
     feedBackLabel.setJustificationType(Justification::centredBottom);
@@ -76,10 +64,8 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     addAndMakeVisible(feedBackLabel);
     
     // Knob for wet/dry amount
-//    wetDryKnob.addListener(this);
     wetDryKnob.setBounds(250, 25, 70, 70);
-//    wetDryKnob.setValue(audioProcessor.wetDryAmount);
-    wetDryKnob.setRange(0.f, 100.f, 1.f);
+    wetDryKnob.setRange(0.f, 1.f, .01f);
     wetDryKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
     wetDryKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     addAndMakeVisible(wetDryKnob);
@@ -89,11 +75,7 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     wetDryLabel.setJustificationType(Justification::centredBottom);
     addAndMakeVisible(feedBackLabel);
     
-    
-    // Grain Size Slider
-//    grainSizeKnob.addListener(this);
-    grainSizeKnob.setBounds(210,120,70,70);
-//    grainSizeKnob.setValue(audioProcessor.grainSize);
+        // Grain Size Slider
     grainSizeKnob.setRange(10.f, 1024.f, 1.f); //min,max,increment size
     grainSizeKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
     grainSizeKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -133,8 +115,10 @@ void GrainDelayAudioProcessorEditor::paint (juce::Graphics& g)
 
 void GrainDelayAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    tempoSyncButton.setBounds(35, 195, 100, 40);
+    grainSizeKnob.setBounds(210,150,100,100);
+
+
 }
 
 

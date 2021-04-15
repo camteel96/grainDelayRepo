@@ -28,16 +28,16 @@ public:
     
     void processSignal(float * signal, const int numSamples, const int channel);
     
-    //void prepare(float newFs);
-    
     float processSample(float x, int channel);
     
-    void setFs(float Fs);
+    void setFs(float newFs);
     
     void setDelayMS(float newDelayMS);
-    void setDelaySamples(float delay);
+    void setDelaySamples(float newDelaySamples);
     
-    void setGrainSize(int grainSize);
+    void setFeedbackAmount(float newFeedbackAmount);
+    
+    void setGrainSize(int newGrainSize);
     
     void setBPM(float newBPM);
     void setNoteDuration(int newNoteSelection);

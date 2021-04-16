@@ -13,15 +13,18 @@
 GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    setSize (400, 300);
+    setSize(400,300);
+    bgImage = ImageCache::getFromMemory(BinaryData::metalbackground_jpg, BinaryData::metalbackground_jpgSize);
     
     // Delay Time Slider
     delayKnob.setRange(10.f, 1024.f, 1.f); //min,max,increment size
-    delayKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 75, 25);
+    delayKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
     delayKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    delayKnob.setLookAndFeel(&largeKnob);
     addAndMakeVisible(delayKnob);
         // Delay label
     delayLabel.setText("Delay", dontSendNotification);
+    delayLabel.setColour(Label::textColourId, Colours::orangered);
     delayLabel.attachToComponent(&delayKnob, false);
     delayLabel.setJustificationType(Justification::centredBottom);
     delayLabel.setBorderSize(BorderSize<int>(1));
@@ -30,7 +33,7 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     // Tempo Sync button
     tempoSyncButton.setButtonText("Sync'd");
     tempoSyncButton.setColour(TextButton::buttonColourId, Colours::dimgrey);
-    tempoSyncButton.setColour(TextButton::buttonOnColourId, Colours::orange);
+    tempoSyncButton.setColour(TextButton::buttonOnColourId, Colours::orangered);
     tempoSyncButton.setClickingTogglesState(true);
     tempoSyncButton.onClick = [this]() {};
     addAndMakeVisible(tempoSyncButton);
@@ -43,52 +46,41 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     noteSelector.addItem("32nd", 5);
     noteSelector.addItem("64th",6);
     noteSelector.setSelectedId(2); // Which note do I want to be initialized upon the plugin opening?
-    noteSelector.setBounds(25, 235, 100, 40);
     addAndMakeVisible(noteSelector);
     
     // Knob for Feedback Amount
     feedbackKnob.setRange(0.f, 1.f, .01f); //min,max,increment size
-    feedbackKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
+    feedbackKnob.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
     feedbackKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    feedbackKnob.setLookAndFeel(&smallKnob);
     addAndMakeVisible(feedbackKnob);
         // Feedback label
     feedBackLabel.setText("Feedback", dontSendNotification);
+    feedBackLabel.setColour(Label::textColourId, Colours::orangered);
     feedBackLabel.attachToComponent(&feedbackKnob, false);
     feedBackLabel.setJustificationType(Justification::centredBottom);
     feedBackLabel.setBorderSize(BorderSize<int>(1));
     addAndMakeVisible(feedBackLabel);
     
-    // Knob for wet/dry amount
+        // Knob for wet/dry amount
     wetDryKnob.setRange(0.f, 1.f, .01f);
-    wetDryKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
+    wetDryKnob.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
     wetDryKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    wetDryKnob.setLookAndFeel(&smallKnob);
     addAndMakeVisible(wetDryKnob);
         // wet/dry label
     wetDryLabel.setText("Dry / Wet", dontSendNotification);
+    wetDryLabel.setColour(Label::textColourId, Colours::orangered);
     wetDryLabel.attachToComponent(&wetDryKnob, false);
     wetDryLabel.setJustificationType(Justification::centredBottom);
     addAndMakeVisible(feedBackLabel);
     
-        // Grain Size Slider
-    grainSizeKnob.setRange(10.f, 1024.f, 1.f); //min,max,increment size
-    grainSizeKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
-    grainSizeKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    addAndMakeVisible(grainSizeKnob);
-        // Grain size label
-    grainSizeLabel.setText("Grain Size", dontSendNotification);
-    grainSizeLabel.attachToComponent(&grainSizeKnob, false);
-    grainSizeLabel.setJustificationType(Justification::centredBottom);
-    addAndMakeVisible(grainSizeLabel);
-    
     // Value Tree Sliders
     sliderAttachments.emplace_back(new AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"delayMS",delayKnob));
-    sliderAttachments.emplace_back(new AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"grainSize",grainSizeKnob));
     sliderAttachments.emplace_back(new AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"feedbackAmount",feedbackKnob));
     sliderAttachments.emplace_back(new AudioProcessorValueTreeState::SliderAttachment(audioProcessor.state,"wetDryAmount",wetDryKnob));
     
     // Value Tree Combobox + button
-//    buttonAttachments.emplace_back(new AudioProcessorValueTreeState::ButtonAttachment(audioProcessor.state,"notTempoSyncd",notTempoSyncButton));
-//    buttonAttachments.emplace_back(new AudioProcessorValueTreeState::ButtonAttachment(audioProcessor.state,"tempoSyncd",tempoSyncButton));
     buttonAttachment = std::make_unique<AudioProcessorValueTreeState::ButtonAttachment> (audioProcessor.state,"tempoSyncd",tempoSyncButton);
     comboBoxAttachments.emplace_back(new AudioProcessorValueTreeState::ComboBoxAttachment(audioProcessor.state,"noteSelect",noteSelector));
 
@@ -101,22 +93,20 @@ GrainDelayAudioProcessorEditor::~GrainDelayAudioProcessorEditor()
 //==============================================================================
 void GrainDelayAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 
-    g.setColour (juce::Colours::teal);
-    g.setFont (20.0f);
+    g.drawImageAt(bgImage, 0, 0);
+    g.setColour (juce::Colours::orangered);
+    g.setFont (30.0f);
     g.drawFittedText ("Grain Delay", getLocalBounds(), juce::Justification::centredTop, 1);
 }
 
 void GrainDelayAudioProcessorEditor::resized()
 {
-    notTempoSyncButton.setBounds(35, 170, 100, 40);
-    tempoSyncButton.setBounds(35, 195, 100, 40);
-    grainSizeKnob.setBounds(210,175,100,100);
-    wetDryKnob.setBounds(250, 50, 100, 100);
-    feedbackKnob.setBounds(170,50,100,100);
-    delayKnob.setBounds(12,45,125,125);
+    tempoSyncButton.setBounds(190, 60, 130, 70);
+    noteSelector.setBounds(270, 75, 100, 40);
+    feedbackKnob.setBounds(180,150,75,75);
+    wetDryKnob.setBounds(270, 150, 75, 75);
+    delayKnob.setBounds(40,100,125,135);
 
 }
 

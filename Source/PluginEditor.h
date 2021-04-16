@@ -10,6 +10,9 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "Components/LargeKnob.h"
+#include "Components/SmallKnob.h"
+
 
 //==============================================================================
 /**
@@ -30,13 +33,18 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     GrainDelayAudioProcessor& audioProcessor;
+    
+    // Background image
+    Image bgImage;
+    LargeKnob largeKnob; // class for look and feel
+    SmallKnob smallKnob;
+    LookAndFeel_V3 lookAndFeel3;
         
     // create instances of knobs and sliders
     Slider delayKnob;
     ComboBox noteSelector;
     Slider feedbackKnob;
     Slider wetDryKnob;
-    Slider grainSizeKnob;
     
     Label delayLabel;
     Label feedBackLabel;

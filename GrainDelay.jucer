@@ -14,6 +14,20 @@
             file="Source/PluginEditor.cpp"/>
       <FILE id="UbdPGA" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
+    <GROUP id="{3ACA2866-DDC3-81D7-174A-C85F97A54DE6}" name="Components">
+      <FILE id="XdG6zL" name="LargeKnob.cpp" compile="1" resource="0" file="Source/Components/LargeKnob.cpp"/>
+      <FILE id="WZtjft" name="LargeKnob.h" compile="0" resource="0" file="Source/Components/LargeKnob.h"/>
+      <FILE id="FGNeRL" name="SmallKnob.cpp" compile="1" resource="0" file="Source/Components/SmallKnob.cpp"/>
+      <FILE id="S9J85k" name="SmallKnob.h" compile="0" resource="0" file="Source/Components/SmallKnob.h"/>
+    </GROUP>
+    <GROUP id="{B7B6D4FB-E937-F4A7-ADF5-E4F45C2CD8F0}" name="BinaryData">
+      <FILE id="ypHlaw" name="blackknoblarge.png" compile="0" resource="1"
+            file="Source/BinaryData/blackknoblarge.png"/>
+      <FILE id="Mli0zM" name="blackknobsmall.png" compile="0" resource="1"
+            file="Source/BinaryData/blackknobsmall.png"/>
+      <FILE id="YK9shy" name="metalbackground.jpg" compile="0" resource="1"
+            file="Source/BinaryData/metalbackground.jpg"/>
+    </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>

@@ -50,16 +50,15 @@ private:
     Label feedBackLabel;
     Label wetDryLabel;
     Label grainSizeLabel;
+    Label temposyncLabel;
 
     ToggleButton tempoSyncButton;
-    ToggleButton notTempoSyncButton;
     
 public:
     // Need to make slider attachment - by putting it at the bottom it gets destroyed first -destorys things from bottom to top in this window.
     // this is the one thing that funnels all your sliders to the value tree, dont need attachment for every slider, but if you other have types of interface options (boxes), youd need other attachments here
     // order is based on reverse order of our constructor, attachments should be destroyed befroe slide - could run into an issue without taht last stpe
     std::vector<std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment>> sliderAttachments;
-//    std::vector<std::unique_ptr<AudioProcessorValueTreeState::ButtonAttachment>> buttonAttachments;
     std::unique_ptr<AudioProcessorValueTreeState::ButtonAttachment> buttonAttachment;
     std::vector<std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment>> comboBoxAttachments;
 

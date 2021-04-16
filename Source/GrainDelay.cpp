@@ -69,23 +69,6 @@ void GrainDelay::setFeedbackAmount(float newFeedbackAmount){
     feedbackAmount = newFeedbackAmount;
 }
 
-//void GrainDelay::setDelaySamples(float delaySamples){
-//    if (delaySamples >= 1.f){
-//        this->delaySamples = delaySamples;
-//    }
-//    else{
-//        this->delaySamples = 0.f;
-//    }
-//}
-//void GrainDelay::setDelaySamples(float newDelaySamples){
-//    if (newDelaySamples >= 1.f){
-//        delaySamples = newDelaySamples;
-//    }
-//    else{
-//        delaySamples = 0.f;
-//    }
-//}
-
 void GrainDelay::setWetDryAmount(float newWetDryAmount){
     if (newWetDryAmount <= 1.0f)
         wetDryAmount = newWetDryAmount;
@@ -136,7 +119,6 @@ void GrainDelay::setNoteDuration(int newNoteSelection){
     setDelayMS(msNote);
 //    setDelaySamples(sampNote);
 }
-
 
 void GrainDelay::setDelayMS(float newDelayMS) {
     if (newDelayMS <= 1000.f){

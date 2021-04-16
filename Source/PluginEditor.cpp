@@ -22,8 +22,10 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     delayKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     delayKnob.setLookAndFeel(&largeKnob);
     addAndMakeVisible(delayKnob);
-        // Delay label
-    delayLabel.setText("Delay", dontSendNotification);
+    // Delay label
+    delayLabel.setText("Grain Size", dontSendNotification);
+    delayLabel.setFont (juce::Font ("Script MT Bold", 30.0f,juce::Font::bold));
+    delayLabel.setColour(Label::backgroundColourId, Colours::peachpuff);
     delayLabel.setColour(Label::textColourId, Colours::orangered);
     delayLabel.attachToComponent(&delayKnob, false);
     delayLabel.setJustificationType(Justification::centredBottom);
@@ -32,13 +34,14 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     
     // Tempo Sync button
     tempoSyncButton.setButtonText("Sync'd");
-    tempoSyncButton.setColour(TextButton::buttonColourId, Colours::dimgrey);
-    tempoSyncButton.setColour(TextButton::buttonOnColourId, Colours::orangered);
+    tempoSyncButton.getToggleStateValue();
+    tempoSyncButton.setColour(ToggleButton::textColourId, Colours::orangered);
     tempoSyncButton.setClickingTogglesState(true);
     tempoSyncButton.onClick = [this]() {};
     addAndMakeVisible(tempoSyncButton);
-    
+
     // Combo Box for a note selector
+    noteSelector.setColour(ComboBox::textColourId, Colours::peachpuff);
     noteSelector.addItem("Half", 1);
     noteSelector.addItem("Quarter", 2);
     noteSelector.addItem("8th", 3);
@@ -54,22 +57,26 @@ GrainDelayAudioProcessorEditor::GrainDelayAudioProcessorEditor (GrainDelayAudioP
     feedbackKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     feedbackKnob.setLookAndFeel(&smallKnob);
     addAndMakeVisible(feedbackKnob);
-        // Feedback label
+    // Feedback label
     feedBackLabel.setText("Feedback", dontSendNotification);
+    feedBackLabel.setFont (juce::Font ("Script MT Bold", 30.0f,juce::Font::bold));
     feedBackLabel.setColour(Label::textColourId, Colours::orangered);
+    feedBackLabel.setColour(Label::backgroundColourId, Colours::peachpuff);
     feedBackLabel.attachToComponent(&feedbackKnob, false);
     feedBackLabel.setJustificationType(Justification::centredBottom);
     feedBackLabel.setBorderSize(BorderSize<int>(1));
     addAndMakeVisible(feedBackLabel);
     
-        // Knob for wet/dry amount
+    // Knob for wet/dry amount
     wetDryKnob.setRange(0.f, 1.f, .01f);
     wetDryKnob.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
     wetDryKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     wetDryKnob.setLookAndFeel(&smallKnob);
     addAndMakeVisible(wetDryKnob);
-        // wet/dry label
-    wetDryLabel.setText("Dry / Wet", dontSendNotification);
+    // wet/dry label
+    wetDryLabel.setText("Mix", dontSendNotification);
+    wetDryLabel.setFont (juce::Font ("Script MT Bold", 30.0f,juce::Font::bold));
+    wetDryLabel.setColour(Label::backgroundColourId, Colours::peachpuff);
     wetDryLabel.setColour(Label::textColourId, Colours::orangered);
     wetDryLabel.attachToComponent(&wetDryKnob, false);
     wetDryLabel.setJustificationType(Justification::centredBottom);
@@ -96,18 +103,28 @@ void GrainDelayAudioProcessorEditor::paint (juce::Graphics& g)
 
     g.drawImageAt(bgImage, 0, 0);
     g.setColour (juce::Colours::orangered);
-    g.setFont (30.0f);
+    g.setFont (juce::Font ("Script MT Bold", 50.0f,juce::Font::bold));
     g.drawFittedText ("Grain Delay", getLocalBounds(), juce::Justification::centredTop, 1);
+    g.drawLine (0, 300, 400, 300, 7);
+    g.drawLine (30, 55, 370, 55, 2);
+    
+    g.setColour(Colours::peachpuff);
+    g.drawRect(180, 62, 195, 45);
+    g.fillRect(180, 62, 195, 45);
+    
 }
 
 void GrainDelayAudioProcessorEditor::resized()
 {
-    tempoSyncButton.setBounds(190, 60, 130, 70);
-    noteSelector.setBounds(270, 75, 100, 40);
+    // Knobs and buttons
+    tempoSyncButton.setBounds(190, 50, 150, 70);
+    noteSelector.setBounds(270, 65, 100, 40);
     feedbackKnob.setBounds(180,150,75,75);
     wetDryKnob.setBounds(270, 150, 75, 75);
     delayKnob.setBounds(40,100,125,135);
-
+    
+    // Labels
+    wetDryLabel.setBounds(10, 110, getWidth()-50, getHeight()-50); // Didn't have an effect
 }
 
 

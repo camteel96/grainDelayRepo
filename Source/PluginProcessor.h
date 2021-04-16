@@ -56,12 +56,8 @@ public:
 
 
     // Begin value tree state code
-//    AudioProcessorValueTreeState state; // state that contains all the attributes of plugin
-    AudioProcessorValueTreeState state; // state that contains all the attributes of plugin
-
-    // Calling function for parameter layout that belongs to this value
-//    AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
-    
+    // state that contains all the attributes of plugin
+    AudioProcessorValueTreeState state; // state that contains all the attributes of plugin    
 
 private:
     
